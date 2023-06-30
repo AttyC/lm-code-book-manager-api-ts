@@ -27,6 +27,16 @@ export const saveBook = async (req: Request, res: Response) => {
 	}
 };
 
+export const deleteBook = async (req: Request, res: Response) => {
+	const bookToBeDeleted = req.body.bookId;
+	try {
+		const message = await bookService.deleteBook(bookToBeDeleted);
+		res.status(201).json(message);
+	} catch (error) {
+		res.status(400).json({ message: (error as Error).message });
+	}
+};
+
 // User Story 4 - Update Book By Id Solution
 export const updateBook = async (req: Request, res: Response) => {
 	const bookUpdateData = req.body;
