@@ -143,3 +143,27 @@ describe("DELETE /api/v1/books endpoint", () => {
 		expect(res.body).toEqual({});
 	});
 });
+
+describe("UPDATE /api/v1/books endpoint", () => {
+	test("status code successfully 204 for updating a book", async () => {
+		// Arrange
+		jest.spyOn(bookService, "updateBook").mockResolvedValue([1]);
+
+		// Act
+		const res = await request(app).put("/api/v1/books/1").send({
+			bookId: 1,
+			title: "Don't Make a Hobbit of It",
+			author: "J. R. R. Tolkien",
+			description: "Someone finds a nice piece of jewellery while on holiday.",
+		});
+
+		// Assert
+		expect(res.statusCode).toEqual(204);
+		expect(bookService.updateBook).toHaveBeenCalledWith(1, {
+			bookId: 1,
+			title: "Don't Make a Hobbit of It",
+			author: "J. R. R. Tolkien",
+			description: "Someone finds a nice piece of jewellery while on holiday.",
+		});
+	});
+});
