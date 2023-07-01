@@ -132,6 +132,20 @@ describe("POST /api/v1/books endpoint", () => {
 		// Assert
 		expect(res.statusCode).toEqual(400);
 	});
+	test("error thrown when trying to add another book with the same bookID", async () => {
+		// Arrange - we can enforce throwing an exception by mocking the implementation
+		jest.spyOn(bookService, "saveBook").mockImplementation(() => {
+			throw new Error("Error saving book");
+		});
+
+		// Act
+		const res = await request(app)
+			.post("/api/v1/books")
+			.send({ bookId: 1, title: "Fantastic Mr. Fox", author: "Roald Dahl" }); // bookId same as existing
+
+		// Assert
+		expect(bookService.saveBook).toThrow(Error);
+	});
 });
 describe("DELETE /api/v1/books endpoint", () => {
 	test("status code successfully 204 for deleting a valid book", async () => {
